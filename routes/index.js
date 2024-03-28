@@ -5,6 +5,7 @@ const UserController = require("../controllers/userController");
 const PostController = require("../controllers/postController");
 const CommentController = require("../controllers/commentController");
 const LikeController = require("../controllers/likeController");
+const FollowController = require("../controllers/followController");
 const tokenAuthentication = require("../middleware/auth");
 
 const uploadsDestination = "uploads";
@@ -42,5 +43,13 @@ router.delete(
 // likes routes
 router.post("/likes", tokenAuthentication, LikeController.likePost);
 router.delete("/likes", tokenAuthentication, LikeController.unlikePost);
+
+// follow routes
+router.post("/follow", tokenAuthentication, FollowController.followUser);
+router.delete(
+  "/unfollow/:id",
+  tokenAuthentication,
+  FollowController.unfollowUser,
+);
 
 module.exports = router;
