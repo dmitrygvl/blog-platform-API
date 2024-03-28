@@ -25,9 +25,9 @@ const UserController = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const png = jdenticon.toPng(name, 200);
-      const avatarName = `$na{me}_${Date.now()}.png`;
-      const avatarPath = path.join(__dirname, "../uploads", avatarName);
+      const png = jdenticon.toPng(`${name}${Date.now()}`, 200);
+      const avatarName = `${name}_${Date.now()}.png`;
+      const avatarPath = path.join(__dirname, "/../uploads", avatarName);
       fs.writeFileSync(avatarPath, png);
 
       const user = await prisma.user.create({
@@ -35,7 +35,7 @@ const UserController = {
           email,
           password: hashedPassword,
           name,
-          avatarUrl: `/uploads/${avatarPath}`,
+          avatarUrl: `/uploads/${avatarName}`,
         },
       });
 
@@ -44,8 +44,6 @@ const UserController = {
       console.error("Error in register", error);
       res.status(500).json({ error: "Internal server error" });
     }
-
-    // res.send('OKAY')
   },
   login: async (req, res) => {
     const { email, password } = req.body;
