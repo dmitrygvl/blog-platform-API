@@ -14,7 +14,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.set("view engine", "jade");
+app.set("view engine", "pug");
 
 app.use("/uploads", express.static("uploads"));
 

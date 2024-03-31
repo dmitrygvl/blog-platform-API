@@ -24,7 +24,12 @@ router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 router.get("/current", tokenAuthentication, UserController.current);
 router.get("/users/:id", tokenAuthentication, UserController.getUserById);
-router.put("/users/:id", tokenAuthentication, UserController.updateUser);
+router.put(
+  "/users/:id",
+  tokenAuthentication,
+  upload.single("avatar"),
+  UserController.updateUser,
+);
 
 //posts routes
 router.post("./posts", tokenAuthentication, PostController.createPost);
