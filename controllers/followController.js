@@ -41,7 +41,7 @@ const FollowController = {
       res.status(201).json({ message: 'Подписка успешно оформлена' });
     } catch (error) {
       console.error('Follow error', error);
-      return res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
 
@@ -69,7 +69,7 @@ const FollowController = {
       res.status(201).json({ message: 'Вы отписались от этого пользователя' });
     } catch (error) {
       console.error('Unfollow error', error);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
 };

@@ -11,7 +11,7 @@ const tokenAuthentication = require('../middleware/auth');
 const uploadsDestination = 'uploads';
 
 const storage = multer.diskStorage({
-  destination: uploadsDestination,
+  destination: uploadDestination,
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },

@@ -81,7 +81,7 @@ const PostController = {
 
       res.json(postWithLikeInfo);
     } catch (error) {
-      console.error('Get post by id error', error);
+      console.error('GetPostById error', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   },
@@ -108,6 +108,7 @@ const PostController = {
 
       res.json(transaction);
     } catch (error) {
+      console.error('Delete post error', error);
       res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },

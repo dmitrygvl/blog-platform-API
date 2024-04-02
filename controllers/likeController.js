@@ -28,7 +28,7 @@ const LikeController = {
       res.json(like);
     } catch (error) {
       console.error('Like post error', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
 
@@ -57,7 +57,7 @@ const LikeController = {
       res.json(like);
     } catch (error) {
       console.error('Like post error', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
 };
