@@ -1,17 +1,17 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const tokenAuthentication = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers['authorization'];
 
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) {
-      return res.status(403).json({ error: "Forbidden" });
+      return res.status(403).json({ error: 'Forbidden' });
     }
 
     req.user = user;

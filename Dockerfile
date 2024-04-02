@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
@@ -16,4 +16,4 @@ COPY prisma/schema.prisma ./prisma/
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD [ "npm", "start" ]

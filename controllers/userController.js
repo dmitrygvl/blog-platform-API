@@ -1,33 +1,31 @@
-const { prisma } = require("../prisma/prisma-client");
-const bcrypt = require("bcryptjs");
-const jdenticon = require("jdenticon");
-const jwt = require("jsonwebtoken");
-const path = require("path");
-const fs = require("fs");
-const { error } = require("console");
+const { prisma } = require('../prisma/prisma-client');
+const bcrypt = require('bcryptjs');
+const jdenticon = require('jdenticon');
+const jwt = require('jsonwebtoken');
+const path = require('path');
+const fs = require('fs');
 
 const UserController = {
   register: async (req, res) => {
     const { email, password, name } = req.body;
 
     if (!email || !password || !name) {
-      return res.status(400).json({ error: "Все поля обязательны" });
+      return res.status(400).json({ error: 'Все поля обязательны' });
     }
 
     try {
       const existingUser = await prisma.user.findUnique({ where: { email } });
-
       if (existingUser) {
         return res
           .status(400)
-          .json({ error: "Пользователь с таким email уже существует" });
+          .json({ error: 'Пользователь с таким email уже существует' });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const png = jdenticon.toPng(`${name}${Date.now()}`, 200);
       const avatarName = `${name}_${Date.now()}.png`;
-      const avatarPath = path.join(__dirname, "/../uploads", avatarName);
+      const avatarPath = path.join(__dirname, '/../uploads', avatarName);
       fs.writeFileSync(avatarPath, png);
 
       const user = await prisma.user.create({
@@ -41,36 +39,36 @@ const UserController = {
 
       res.json(user);
     } catch (error) {
-      console.error("Error in register", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error('Error in register', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   },
   login: async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: "Все поля обязательны" });
+      return res.status(400).json({ error: 'Все поля обязательны' });
     }
 
     try {
       const user = await prisma.user.findUnique({ where: { email } });
 
       if (!user) {
-        return res.status(400).json({ error: "Неверный логин или пароль" });
+        return res.status(400).json({ error: 'Неверный логин или пароль' });
       }
 
       const isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) {
-        return res.status(400).json({ error: "Неверный логин или пароль" });
+        return res.status(400).json({ error: 'Неверный логин или пароль' });
       }
 
       const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
 
       res.json({ token });
     } catch (error) {
-      console.error("Login error", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error('Login error', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   },
   getUserById: async (req, res) => {
@@ -87,7 +85,7 @@ const UserController = {
       });
 
       if (!user) {
-        return res.status(404).json({ error: "Пользователь не найден" });
+        return res.status(404).json({ error: 'Пользователь не найден' });
       }
 
       const isFollowing = await prisma.follows.findFirst({
@@ -96,9 +94,10 @@ const UserController = {
         },
       });
 
-      res.json({ user, isFollowing: Boolean(isFollowing) });
+      res.json({ ...user, isFollowing: Boolean(isFollowing) });
     } catch (error) {
-      console.error("Get Current error", error);
+      console.error('Get Current error', error);
+      res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
   updateUser: async (req, res) => {
@@ -112,7 +111,7 @@ const UserController = {
     }
 
     if (id !== req.user.userId) {
-      return res.status(403).json({ error: "Недостаточно прав" });
+      return res.status(403).json({ error: 'Недостаточно прав' });
     }
 
     try {
@@ -121,10 +120,10 @@ const UserController = {
           where: { email: email },
         });
 
-        if (existingUser && existingUser.id !== id) {
+        if (existingUser && existingUser.id !== parseInt(id)) {
           return res
             .status(400)
-            .json({ error: "Пользователь с таким email уже существует" });
+            .json({ error: 'Пользователь с таким email уже существует' });
         }
       }
 
@@ -133,25 +132,22 @@ const UserController = {
         data: {
           email: email || undefined,
           name: name || undefined,
-          avatarUrl: filePath ? `${filePath}` : undefined,
+          avatarUrl: filePath ? `/${filePath}` : undefined,
           dateOfBirth: dateOfBirth || undefined,
           bio: bio || undefined,
           location: location || undefined,
         },
       });
-
       res.json(user);
     } catch (error) {
-      console.error("Update user error", error);
-      res.status(500).json({ error: "Internal server error " });
+      console.error('Update user error', error);
+      res.status(500).json({ error: 'Что-то пошло не так' });
     }
   },
   current: async (req, res) => {
     try {
       const user = await prisma.user.findUnique({
-        where: {
-          id: req.user.userId,
-        },
+        where: { id: req.user.userId },
         include: {
           followers: {
             include: {
@@ -167,13 +163,13 @@ const UserController = {
       });
 
       if (!user) {
-        return res.status(400).json({ error: "Пользователь не найден" });
+        return res.status(400).json({ error: 'Пользователь не найден' });
       }
 
-      res.json(user);
+      return res.status(200).json(user);
     } catch (error) {
-      console.error("Get Current error", error);
-      res.status(500).json({ error: "Internal server error " });
+      console.error('Get Current error', error);
+      res.status(500).json({ error: 'Internal server error ' });
     }
   },
 };

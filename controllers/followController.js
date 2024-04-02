@@ -1,4 +1,4 @@
-const { prisma } = require("../prisma/prisma-client");
+const { prisma } = require('../prisma/prisma-client');
 
 const FollowController = {
   followUser: async (req, res) => {
@@ -8,20 +8,27 @@ const FollowController = {
     if (followingId === userId) {
       return res
         .status(500)
-        .json({ error: "Нельзя подписаться на самого себя" });
+        .json({ error: 'Нельзя подписаться на самого себя' });
     }
 
     try {
-      const existingFollow = await prisma.follows.findFirst({
+      const existingSubscription = await prisma.follows.findFirst({
         where: {
-          AND: [{ FollowerId: userId }, { followingId }],
+          AND: [
+            {
+              followerId: userId,
+            },
+            {
+              followingId,
+            },
+          ],
         },
       });
 
-      if (existingFollow) {
+      if (existingSubscription) {
         return res
           .status(400)
-          .json({ error: "Подписка на пользователя уже оформлена " });
+          .json({ error: 'Подписка на пользователя уже оформлена ' });
       }
 
       await prisma.follows.create({
@@ -31,10 +38,10 @@ const FollowController = {
         },
       });
 
-      res.status(201).json({ message: "Подписка успешно оформлена" });
+      res.status(201).json({ message: 'Подписка успешно оформлена' });
     } catch (error) {
-      console.error("Follow error", error);
-      return res.status(500).json({ error: "Internal server error" });
+      console.error('Follow error', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   },
 
@@ -45,24 +52,24 @@ const FollowController = {
     try {
       const follows = await prisma.follows.findFirst({
         where: {
-          AND: [{ followerId, userId }, { followingId }],
+          AND: [{ followerId: userId }, { followingId: followingId }],
         },
       });
 
       if (!follows) {
         return res
           .status(404)
-          .json({ error: "Вы не подписаны на этого пользователя" });
+          .json({ error: 'Вы не подписаны на этого пользователя' });
       }
 
       await prisma.follows.delete({
         where: { id: follows.id },
       });
 
-      res.status(201).json({ message: "Вы отписались от этого пользователя" });
+      res.status(201).json({ message: 'Вы отписались от этого пользователя' });
     } catch (error) {
-      console.error("Unfollow error", error);
-      return res.status(500).json({ error: "Internal server error" });
+      console.error('Unfollow error', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   },
 };

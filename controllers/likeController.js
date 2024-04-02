@@ -1,13 +1,13 @@
-const { prisma } = require("../prisma/prisma-client");
-const { trace } = require("../routes");
+const { prisma } = require('../prisma/prisma-client');
 
 const LikeController = {
   likePost: async (req, res) => {
     const { postId } = req.body;
+
     const userId = req.user.userId;
 
     if (!postId) {
-      return res.status(400).json({ error: "Все поля обязательны" });
+      return res.status(400).json({ error: 'Все поля обязательны' });
     }
 
     try {
@@ -16,7 +16,9 @@ const LikeController = {
       });
 
       if (existingLike) {
-        return res.status(400).json({ error: "Лайк уже поставлен" });
+        return res
+          .status(400)
+          .json({ error: 'Вы уже поставили лайк этому посту' });
       }
 
       const like = await prisma.like.create({
@@ -25,17 +27,18 @@ const LikeController = {
 
       res.json(like);
     } catch (error) {
-      console.error("Like post error", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error('Like post error', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   },
 
   unlikePost: async (req, res) => {
     const { id } = req.params;
+
     const userId = req.user.userId;
 
     if (!id) {
-      return res.status(400).json({ error: "Вы уже поставили дизлайк" });
+      return res.status(400).json({ error: 'Вы уже поставили дизлайк' });
     }
 
     try {
@@ -44,7 +47,7 @@ const LikeController = {
       });
 
       if (!existingLike) {
-        return res.status(400).json({ error: "Не удалось поставить дизлайк" });
+        return res.status(400).json({ error: 'Не удалось поставить дизлайк' });
       }
 
       const like = await prisma.like.deleteMany({
@@ -53,8 +56,8 @@ const LikeController = {
 
       res.json(like);
     } catch (error) {
-      console.error("Like post error", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error('Like post error', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   },
 };
