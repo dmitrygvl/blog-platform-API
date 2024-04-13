@@ -1,6 +1,7 @@
 coverage
 .github
 .husky
+README.md
 
 /node_modules
 client/node_modules
