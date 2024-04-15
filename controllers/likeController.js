@@ -38,7 +38,9 @@ const LikeController = {
     const userId = req.user.userId;
 
     if (!id) {
-      return res.status(400).json({ error: 'Вы уже поставили дизлайк' });
+      return res
+        .status(400)
+        .json({ error: 'Вы уже поставили дизлайк этому посту' });
     }
 
     try {
@@ -47,7 +49,7 @@ const LikeController = {
       });
 
       if (!existingLike) {
-        return res.status(400).json({ error: 'Не удалось поставить дизлайк' });
+        return res.status(400).json({ error: 'Лайк уже существует' });
       }
 
       const like = await prisma.like.deleteMany({

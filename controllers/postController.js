@@ -48,7 +48,7 @@ const PostController = {
       res.json(postsWithLikeInfo);
     } catch (err) {
       console.error('Get all posts error', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Ошибка при получении постов' });
     }
   },
 
@@ -82,7 +82,7 @@ const PostController = {
       res.json(postWithLikeInfo);
     } catch (error) {
       console.error('GetPostById error', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Ошибка при получении поста' });
     }
   },
 

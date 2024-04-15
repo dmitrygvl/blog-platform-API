@@ -11,7 +11,7 @@ const tokenAuthentication = require('../middleware/auth');
 const uploadsDestination = 'uploads';
 
 const storage = multer.diskStorage({
-  destination: uploadDestination,
+  destination: uploadsDestination,
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
@@ -32,10 +32,10 @@ router.put(
 );
 
 //posts routes
-router.post('./posts', tokenAuthentication, PostController.createPost);
-router.get('./posts', tokenAuthentication, PostController.getAllPosts);
-router.post('./posts/:id', tokenAuthentication, PostController.getPostById);
-router.delete('./posts/:id', tokenAuthentication, PostController.deletePost);
+router.post('/posts', tokenAuthentication, PostController.createPost);
+router.get('/posts', tokenAuthentication, PostController.getAllPosts);
+router.get('/posts/:id', tokenAuthentication, PostController.getPostById);
+router.delete('/posts/:id', tokenAuthentication, PostController.deletePost);
 
 //comments routes
 router.post('/comments', tokenAuthentication, CommentController.createComment);
@@ -47,7 +47,7 @@ router.delete(
 
 // likes routes
 router.post('/likes', tokenAuthentication, LikeController.likePost);
-router.delete('/likes', tokenAuthentication, LikeController.unlikePost);
+router.delete('/likes/:id', tokenAuthentication, LikeController.unlikePost);
 
 // follow routes
 router.post('/follow', tokenAuthentication, FollowController.followUser);
