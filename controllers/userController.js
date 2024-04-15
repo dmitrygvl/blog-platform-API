@@ -1,6 +1,6 @@
 const { prisma } = require('../prisma/prisma-client');
 const bcrypt = require('bcryptjs');
-const Jdenticon = require('jdenticon');
+const jdenticon = require('jdenticon');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
@@ -112,7 +112,6 @@ const UserController = {
       filePath = req.file.path;
     }
 
-    // Проверка, что пользователь обновляет свою информацию
     if (id !== req.user.userId) {
       return res.status(403).json({ error: 'Недостаточно прав' });
     }
